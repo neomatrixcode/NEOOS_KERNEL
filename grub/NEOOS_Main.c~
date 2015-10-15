@@ -1,0 +1,21 @@
+
+#ifndef NEOOS
+#endif
+#include <ND_Color.hpp>
+#include <ND_Screen.hpp>
+#include <ND_Types.hpp>
+
+int NEOOS_Main()
+{
+
+ND::Screen::Clear(ND_CLOR_BLANCO)
+ND::Screen::ColocarColor(ND_SIDE_BACKGROUND, ND_CLOR_BLANCO);
+ND::Screen::ColocarColor(ND_SIDE_FOREGROUND, ND_CLOR_VERDE);
+ND::Screen::ColocarString("NEOOS\n");
+ND::Screen::ColocarColor(ND_SIDE_FOREGROUND, ND_CLOR_ROJO);
+ND::Screen::ColocarString("DESARROLLADO POR NEOMATRIX\n");
+
+
+return 0;
+
+}

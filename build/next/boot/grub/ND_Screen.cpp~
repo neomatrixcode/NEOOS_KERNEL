@@ -1,0 +1,129 @@
+#include <ND_Types.hpp>
+#include <ND_Color.hpp>
+#include <ND_Screen.hpp>
+#include <ND_Ports.hpp>
+
+uint16_t *vidmem= (uint16_t *)0xB8000;
+ND_Color backColour = ND_COLOR_BLACK;
+ND_Color foreColour = ND_COLOR_WHITE;
+uint8_t cursor_x = 0;
+uint8_t cursor_y = 0;
+
+static void UpdateCursor()
+{
+   //TOMADO EN CUENTA QUE LA PANTALLA ES DE UN ANCHO DE 80
+   uint16_t cursorLocation = cursor_y * 80 + cursor_x;
+   ND::Ports::OutputB(0x3D4, 14);            
+   ND::Ports::OutputB(0x3D5, cursorLocation >> 8); 
+   ND::Ports::OutputB(0x3D4, 15);                  
+   ND::Ports::OutputB(0x3D5, cursorLocation);      
+}
+
+
+ND_Color ND::Screen::ObtenerColor(ND_SIDE side)
+{
+	if(side==ND_SIDE_BACKGROUND){
+		return backColour;
+	}else{
+		return foreColour;
+	}
+}
+
+void ND::Screen::ColocarColor(ND_SIDE side, ND_Color colour)
+{
+	if(side==ND_SIDE_BACKGROUND)
+	{
+		backColour=colour;
+	}else{
+		foreColour=colour;
+	}
+}
+
+void ND::Screen::ColocarChar(char c)
+{
+	uint8_t  attributeByte = (backColour << 4) | (foreColour & 0x0F);
+	uint16_t attribute = attributeByte << 8;
+	uint16_t *location;
+	if (c == 0x08 && cursor_x)
+	{
+		cursor_x--;
+	}else if(c == '\r')
+	{
+		cursor_x=0;
+	}else if(c == '\n')
+	{
+		cursor_x=0;
+		cursor_y++;
+	}
+	if(c >= ' ') 
+	{
+		location = vidmem + (cursor_y*80 + cursor_x);
+		*location = c | attribute;
+		cursor_x++;
+	}
+	if(cursor_x >= 80) 
+	{
+		cursor_x = 0;
+		cursor_y++;
+	}
+
+	
+	
+	uint8_t attributeByte2 = (0 /*negro*/ << 4) | (15 /*blanco*/ & 0x0F);
+	uint16_t blank = 0x20 /* espacio */ | (attributeByte2 << 8);
+	if(cursor_y >= 25)
+	{
+       int i;
+       for (i = 0*80; i < 24*80; i++)
+       {
+           vidmem[i] = vidmem[i+80];
+       }
+
+      
+       for (i = 24*80; i < 25*80; i++)
+       {
+           vidmem[i] = blank;
+       }
+       
+       cursor_y = 24;
+   }
+	
+	UpdateCursor();
+}
+
+void ND::Screen::PutString(const char* str)
+{
+	int i=0;
+	while(str[i]) 
+	{
+		ND::Screen::PutChar(str[i++]);
+	}
+}
+
+ void ND::Screen::Clear(ND_Color colour)
+{
+   
+   uint8_t attributeByte = (colour /*este es el fondo*/ << 4) | (15 /*letras*/ & 0x0F);
+   uint16_t blank = 0x20 /* inroduce un espacio */ | (attributeByte << 8);
+
+   int i;
+   for (i = 0; i < 80*25; i++)
+   {
+       vidmem[i] = blank;
+   }
+
+ 
+   cursor_x = 0;
+   cursor_y = 0;
+   
+   UpdateCursor();
+}
+
+void ND::Screen::SetCursor(uint8_t x, uint8_t y)
+{
+	cursor_x=x;
+	cursor_y=y;
+	
+	UpdateCursor();
+}
+

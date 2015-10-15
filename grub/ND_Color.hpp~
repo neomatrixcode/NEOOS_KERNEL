@@ -1,0 +1,24 @@
+
+#ifndef ND_COLOR_HPP
+#define ND_COLOR_HPP
+
+typedef enum ND_Color{ 
+	ND_CLOR_NEGRO			= 0,
+	ND_CLOR_AZUL    		= 1,
+	ND_CLOR_VERDE			= 2,
+	ND_CLOR_CYAN			= 3,
+	ND_CLOR_ROJO			= 4,
+	ND_CLOR_MORADO	                = 5,
+	ND_CLOR_CAFE			= 6,
+	ND_CLOR_GRISCLARO		= 7,
+	ND_CLOR_GRISOSCURO		= 8,
+	ND_CLOR_AZULCLARO		= 9,
+	ND_CLOR_VERDECLARO	        = 10,
+	ND_CLOR_CYANCLARO		= 11,
+	ND_CLOR_ROJOCLARO		= 12,
+	ND_CLOR_MORADOCLARO	        = 13,
+	ND_CLOR_CAFECLARO	        = 14,
+	ND_CLOR_CLANCO			= 15
+
+} ND_Color;
+#endif

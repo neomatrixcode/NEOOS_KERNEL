@@ -1,0 +1,10 @@
+menuentry "NEOOS" --class os{
+
+echo "Arrancando NEOOS"
+
+multiboot /net/START.ELF
+
+boot
+
+
+}

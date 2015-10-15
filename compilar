@@ -1,0 +1,25 @@
+cd neoos
+cd boot
+cd grub
+gcc -o NEOOS_Main.o -c NEOOS_Main.c -nostdlib -fPIC -ffreestanding
+gcc -o START.ELF kernel.o NEOOS_Main.o -Tlink.ld -nostdlib -fPIC -ffreestanding -lgcc
+cd /
+sudo grub-mkrescue -o neoos.iso -v rootso
+sudo qemu-system-i386 neoos.iso
+--------------------------------
+sudo apt-get install build-essential;
+sudo apt-get install g++;
+sudo apt-get install cmake;
+sudo apt-get install xorriso;
+sudo apt-get install qemu-system-x86;
+-----------------ahora--------------
+cd neoos; cd build;
+cmake ..;
+make;
+make DESTDIR=next install;
+chmod +x iso.sh;
+./iso.sh;
+sudo qemu-system-i386 neoos.iso;
+
+
+
